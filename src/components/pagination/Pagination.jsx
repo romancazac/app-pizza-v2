@@ -1,8 +1,9 @@
 import React from 'react'
 import ReactPaginate from 'react-paginate';
+import { AppContext } from '../../App';
 import './pagination.scss'
-const Pagination = ({onPaginationPage}) => {
-
+const Pagination = () => {
+   const {onPaginationPage} = React.useContext(AppContext)
    return (
       <div className="pagination">
          <ReactPaginate

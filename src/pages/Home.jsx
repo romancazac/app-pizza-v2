@@ -6,13 +6,13 @@ import Product from '../components/Product';
 import TitleBlock from '../components/TitleBlock';
 import Loader from '../components/Loader';
 import Pagination from '../components/pagination/Pagination';
-function Home({loaded, products,categoryActive,onCategory,sortActive,onSortActive,onPaginationPage}) {
+function Home({loaded, products}) {
    return (
       <section className="products">
          <div className="products__container">
             <div className="products__category row-category">
-               <Category onCategory={onCategory} categoryActive={categoryActive} />
-               <Sort sortActive={sortActive} onSortActive={onSortActive}/>
+               <Category />
+               <Sort />
             </div>
             <div className="products__product product">
                <TitleBlock title='Все пиццы' />
@@ -37,7 +37,7 @@ function Home({loaded, products,categoryActive,onCategory,sortActive,onSortActiv
                   }
 
                </div>
-               <Pagination onPaginationPage={onPaginationPage}/>
+               <Pagination />
             </div>
          </div>
       </section>

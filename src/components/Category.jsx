@@ -1,6 +1,9 @@
-import React from "react"
+import React, { useContext } from "react"
+import { AppContext } from "../App"
 
-function Category({onCategory,categoryActive}) {
+function Category() {
+
+   const {onCategory, categoryActive} = useContext(AppContext)
    const category = [
       'Все',
       'Мясные',

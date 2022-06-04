@@ -1,6 +1,8 @@
 
 import React from "react"
-function Sort({onSortActive,sortActive}) {
+import { AppContext } from "../App";
+function Sort() {
+   const {onSortActive,sortActive} = React.useContext(AppContext) 
    const sortItems = [
       {'name':'популярности','sortProperty':'rating'}, 
       {'name' : 'по цене','sortProperty':'price'},

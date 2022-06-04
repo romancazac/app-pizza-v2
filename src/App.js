@@ -4,7 +4,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link
 } from "react-router-dom";
 
 import './style.css';
@@ -13,9 +12,10 @@ import Header from './components/Header';
 import Home from './pages/Home';
 import Basket from './pages/Basket';
 
-
+export const AppContext = React.createContext();
 
 function App() {
+
 
   const [search, setSearch] = React.useState('');
 
@@ -27,10 +27,10 @@ function App() {
 
   const [categoryActive, setCategoryActive] = React.useState(0);
   const [sortActive, setSortActive] = React.useState({ 'name': 'популярности', 'sortProperty': 'rating' });
-  const onCategory = (item) => {
+  const onSetCategory = (item) => {
     setCategoryActive(item)
   }
-  const onSortActive = (obj) => {
+  const onSetSortActive = (obj) => {
     setSortActive(obj);
 
   }
@@ -53,23 +53,22 @@ function App() {
       })
   }, [categoryActive, sortActive, search, paginationPage]);
 
+  const onPaginationPage = (number) => setPaginationPage(number);
+  const onCategory =(index) => onSetCategory(index);
+  const  onSortActive=(obj) => onSetSortActive(obj);
   return (
-
+    
     <div className="App">
-
+      <AppContext.Provider value={{search, setSearch, onPaginationPage, onCategory, categoryActive, onSortActive,sortActive}}>    
       <div className="wrapper">
-        <Header search={search} setSearch={setSearch} />
+        <Header  />
         <main className="page">
           <Routes>
             <Route path="/" element={<Home
               loaded={loaded}
-              products={products}
-              onCategory={(index) => onCategory(index)}
-              categoryActive={categoryActive}
-              onSortActive={(obj) => onSortActive(obj)}
-              sortActive={sortActive}
+              products={products}    
               search={search}
-              onPaginationPage={(number) => setPaginationPage(number) }
+               
             />} />
             <Route path="basket" element={<Basket />} />
           </Routes>
@@ -77,7 +76,7 @@ function App() {
         </main>
 
       </div>
-
+      </AppContext.Provider>    
     </div>
   );
 }
