@@ -1,0 +1,21 @@
+.search{
+   display: flex;
+   align-items: center;
+   border: 1px solid #F9F9F9;
+   border-radius: 30px;
+   overflow: hidden;
+   flex:0 1 400px;
+   &__inp{
+      flex: 1 1 auto;
+      height: 40px;
+      padding: 0 10px;
+      outline: none;
+   }
+   &__icon{
+      width: 40px;
+      height: 40px;
+      background-image: url('../../img/search.svg');
+      background-repeat: no-repeat;
+      background-position: center;
+   }
+}
