@@ -1,19 +1,33 @@
+import debounce from 'lodash.debounce';
 import React from 'react';
 import { AppContext } from '../../App';
 
 import './search.scss';
 const Search = () => {
-   const {search, setSearch} = React.useContext(AppContext)
+   const {search, setSearch} = React.useContext(AppContext);
+   const [value, setValue] = React.useState('');
+   const updateSearch = React.useCallback(
+      debounce((value) => {
+         setSearch(value);
+   }, 1000)
+   
+   );
+   const searchProduct = (e) => {
+      setValue(e.target.value);
+      updateSearch(e.target.value)
+   }
+   
+
    return (
       <div className='search'>
          <input
             className='search__inp'
-            type="text"
+            type="search"
             placeholder='поиск пиццы...' 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={value}
+            onChange={searchProduct}
             />
-         <button className="search__icon"></button>
+         <button className="search__icon" ></button>
       </div>
 
    )

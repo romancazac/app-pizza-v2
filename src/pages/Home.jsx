@@ -6,7 +6,11 @@ import Product from '../components/Product';
 import TitleBlock from '../components/TitleBlock';
 import Loader from '../components/Loader';
 import Pagination from '../components/pagination/Pagination';
-function Home({loaded, products}) {
+import { useSelector } from 'react-redux';
+function Home({loaded}) {
+
+   const {pizza,status}= useSelector(state => state.pizza);
+   console.log(status)
    return (
       <section className="products">
          <div className="products__container">
@@ -18,9 +22,10 @@ function Home({loaded, products}) {
                <TitleBlock title='Все пиццы' />
                <div className="product__row">
                   {
-                     loaded
+                     status === 'loading'
                         ?
                         [...new Array(6)].map((_, i) => <Loader key={i} />)
+                       
                         :
                         //search local
                         // products.filter((obj) => {
@@ -31,7 +36,7 @@ function Home({loaded, products}) {
                         // }).
                         // map((items) => <Product  {...items} key={items.id} />)
 
-                        products.map((items) =>  <Product  {...items} key={items.id} />)
+                        pizza.map((items) =>  <Product  {...items} key={items.id} />)
 
                          
                   }

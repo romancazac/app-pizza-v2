@@ -3,7 +3,7 @@ import { AppContext } from "../App"
 
 function Category() {
 
-   const {onCategory, categoryActive} = useContext(AppContext)
+   const {onCategory, categoryId} = useContext(AppContext)
    const category = [
       'Все',
       'Мясные',
@@ -17,7 +17,7 @@ function Category() {
       <div className="row-category__items">
          {
             category.map((item, index) =>
-               <button className={ categoryActive === index ? 'row-category__item _active' : 'row-category__item '}
+               <button className={categoryId === index ? 'row-category__item _active' : 'row-category__item '}
                   key={index}
                   onClick={() => onCategory(index)}>
                   {item}</button>

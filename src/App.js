@@ -1,82 +1,82 @@
 import React from 'react';
-import axios from 'axios';
+
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
 } from "react-router-dom";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setCategoryId, setSortActive } from './redux/slices/filterSlices';
+import { setPaginationPage } from './redux/slices/paginationSlice';
 import './style.css';
 
 import Header from './components/Header';
 import Home from './pages/Home';
 import Basket from './pages/Basket';
+import { fetchPizzas } from './redux/slices/pizzaSlice';
 
 export const AppContext = React.createContext();
 
 function App() {
 
+  const dispach = useDispatch();
+
+  const { categoryId, sortActive } = useSelector(state => state.filter);
+  const paginationPage = useSelector(state => state.pagination.paginationPage)
 
   const [search, setSearch] = React.useState('');
 
-  const [products, setProducts] = React.useState([]);
-  const [loaded, setLoaded] = React.useState(true);
 
-  const [paginationPage, setPaginationPage] = React.useState(1);
-  console.log(paginationPage)
-
-  const [categoryActive, setCategoryActive] = React.useState(0);
-  const [sortActive, setSortActive] = React.useState({ 'name': 'популярности', 'sortProperty': 'rating' });
   const onSetCategory = (item) => {
-    setCategoryActive(item)
+    dispach(setCategoryId(item))
   }
-  const onSetSortActive = (obj) => {
-    setSortActive(obj);
 
+  const onSetSortActive = (obj) => {
+
+    dispach(setSortActive(obj))
+  }
+
+  const getPizzas = async () => {
+    const category = `${categoryId > 0 ? `&category=${categoryId}` : ''}`;
+    const sort = `&_sort=${sortActive.sortProperty}&_order=desc`;
+    const searchProduct = `&q=${search}`;
+    const page = `&_page=${paginationPage}&_limit=4`
+    dispach(fetchPizzas({
+      category,
+      sort,
+      searchProduct,
+      page
+    }))
+    
   }
 
 
   React.useEffect(() => {
-    const category = `${categoryActive > 0 ? `&category=${categoryActive}` : ''}`;
-    const sort = `&_sort=${sortActive.sortProperty}&_order=desc`;
-    const searchProduct = `&q=${search}`;
-    const page =`&_page=${paginationPage}&_limit=4`
-    setLoaded(true);
-    axios.get(`http://localhost:3001/pizzas?${page}${category}${sort}${searchProduct}`)
-      .then(function (data) {
+    // setLoaded(true);
+    getPizzas()
+  }, [categoryId, sortActive, search, paginationPage]);
 
-        setProducts(data.data);
-        setLoaded(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      })
-  }, [categoryActive, sortActive, search, paginationPage]);
-
-  const onPaginationPage = (number) => setPaginationPage(number);
-  const onCategory =(index) => onSetCategory(index);
-  const  onSortActive=(obj) => onSetSortActive(obj);
+  const onPaginationPage = (number) => dispach(setPaginationPage(number));
+  const onCategory = (index) => onSetCategory(index);
+  const onSortActive = (obj) => onSetSortActive(obj);
   return (
-    
+
     <div className="App">
-      <AppContext.Provider value={{search, setSearch, onPaginationPage, onCategory, categoryActive, onSortActive,sortActive}}>    
-      <div className="wrapper">
-        <Header  />
-        <main className="page">
-          <Routes>
-            <Route path="/" element={<Home
-              loaded={loaded}
-              products={products}    
-              search={search}
-               
-            />} />
-            <Route path="basket" element={<Basket />} />
-          </Routes>
+      <AppContext.Provider value={{ search, setSearch, onPaginationPage, onCategory, categoryId, onSortActive, sortActive }}>
+        <div className="wrapper">
+          <Header />
+          <main className="page">
+            <Routes>
+              <Route path="/" element={<Home
+                search={search}
 
-        </main>
+              />} />
+              <Route path="basket" element={<Basket />} />
+            </Routes>
 
-      </div>
-      </AppContext.Provider>    
+          </main>
+
+        </div>
+      </AppContext.Provider>
     </div>
   );
 }

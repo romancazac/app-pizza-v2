@@ -2,7 +2,8 @@
 import React from "react"
 import { AppContext } from "../App";
 function Sort() {
-   const {onSortActive,sortActive} = React.useContext(AppContext) 
+   const {onSortActive,sortActive} = React.useContext(AppContext);
+   const sortRef = React.useRef(); 
    const sortItems = [
       {'name':'популярности','sortProperty':'rating'}, 
       {'name' : 'по цене','sortProperty':'price'},
@@ -15,11 +16,22 @@ function Sort() {
       setOpenList(!openList);
      
    }
-   // setOpenList(false);
 
+   React.useEffect(() => {
+      const closeModal = (e) => {
+         if(!e.path.includes(sortRef.current)){
+            setOpenList(false);
+            console.log("click")
+         }
+      }
+      document.body.addEventListener('click',closeModal);
+      return () => {
+         document.body.removeEventListener('click',closeModal);
+      }
+   }, []);
 
    return (
-      <div className="row-category__sort">
+      <div ref={sortRef} className="row-category__sort">
          <div className="row-category__btns" onClick={onOpenList}>
             Сортировка по: <span>{sortActive.name}</span>
          </div>
